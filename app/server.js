@@ -38,39 +38,57 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
-async.retry(
-  {times: 1000, interval: 1000},
-  function(callback) {
-    pg.connect('postgres://postgres@db/postgres', function(err, client, done) {
-      if (err) {
-        console.error("Waiting for db");
-      }
-      callback(err, client);
-    });
-  },
-  function(err, client) {
+const connectToPG = function(callback) {
+  pg.connect('postgres://postgres@db/postgres', function(err, client, done) {
     if (err) {
-      return console.err("Giving up");
+      console.error("Waiting for db");
     }
-    console.log("Connected to db");
-    getVotes(client);
-  }
-);
+    callback(err, client);
+  });
+};
 
-function getVotes(client) {
+const getVotes = function(err, client) {
+  if (err) {
+    return console.err("Giving up");
+  }
+  console.log("Connected to db");
+
   client.query('SELECT vote, COUNT(id) AS count FROM votes GROUP BY vote', [], function(err, result) {
     if (err) {
       console.error("Error performing query: " + err);
     } else {
       var votes = collectVotesFromResult(result);
+      console.log("votes from pg", votes)
       io.sockets.emit("scores", JSON.stringify(votes));
     }
 
-    setTimeout(function() {getVotes(client) }, 1000);
+    setTimeout(function() { getVotes(null, client) }, 1000);
   });
 }
 
+const createVoteTable = function(err, client){
+  client.query("CREATE TABLE IF NOT EXISTS votes ( id VARCHAR(255) NOT NULL UNIQUE, vote VARCHAR(255) NOT NULL)",
+    [],
+    function(err, data){
+      if (err) {
+        console.error("Error performing query: " + err);
+      } else {
+        //OK
+        getVotes(null, client)
+      }
+    }
+  );
+}
+
+// https://caolan.github.io/async/docs.html#retry
+async.retry(
+  {times: 1000, interval: 1000},
+  /* task */connectToPG,
+  /* callback */createVoteTable // => calls getVotes if successful
+);
+
 function collectVotesFromResult(result) {
+  console.log("result from db", result)
   var votes = {a: 0, b: 0};
 
   result.rows.forEach(function (row) {
@@ -94,14 +112,22 @@ app.use(function(req, res, next) {
 app.use(function(req, res, next) {
   if(!req.cookies.voterId)
   {
-    req.cookies.voterId = crypto.randomBytes(64).toString('hex');
+    const voterId = crypto.randomBytes(64).toString('hex');
+    req.cookies.voterId = voterId;
+    res.cookie("voterId", voterId);
   }
   next();
 });
 
 app.use(express.static(__dirname + '/views'));
 
-app.get('/', function (req, res) {
+// secure endpoint requires auth with JWT
+app.use(function(req, res){
+  
+})
+
+// '/' ou '/vote'
+app.get(/\/|\/vote/, function (req, res) {
   res.render('./vote.ejs', {
     vote: null,
     option_a,
@@ -133,13 +159,34 @@ app.get('/', function (req, res) {
 //   return resp
 
 // http://expressjs.com/fr/api.html#req.body
-app.post('/vote', upload.array(), function (req, res) {
+app.post('/', upload.array(), function (req, res) {
   console.log("vote", req.body.vote)
-  redisClient.rpush("votes", req.body.vote, redis.print);
-});
+  // redisClient.rpush("votes",
+  //   {
+  //     'voterId': req.cookies.voterId,
+  //     'vote': req.body.vote
+  //   },
+  //   redis.print
+  // );
+  connectToPG((err,client)=>{
+    if (err) {
+      return console.err("Giving up");
+    }
+    console.log("Connected to db");
 
-app.get('/vote', function (req, res) {
-  res.sendFile(path.resolve(__dirname + '/views/vote.html'));
+    client.query(`INSERT INTO votes (id, vote) VALUES ($1, $2)
+                  ON CONFLICT (id) DO UPDATE
+                  SET vote = $2`,
+      [req.cookies.voterId, req.body.vote],
+      function(err, result) {
+        if (err) {
+          res.status(500).send({ error: "Error performing query: " + err });
+        } else {
+          res.redirect("/vote");
+        }
+      }
+    ); // client.query
+  }); //connectToPG
 });
 
 app.get('/result', function (req, res) {
