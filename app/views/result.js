@@ -5,12 +5,14 @@ var bg1 = document.getElementById('background-stats-1');
 var bg2 = document.getElementById('background-stats-2');
 
 app.controller('statsCtrl', function($scope){
+  console.log("ctrl init")
   $scope.aPercent = 50;
   $scope.bPercent = 50;
 
   var updateScores = function(){
     socket.on('scores', function (json) {
        data = JSON.parse(json);
+       console.log("on scores", data)
        var a = parseInt(data.a || 0);
        var b = parseInt(data.b || 0);
 
@@ -32,6 +34,7 @@ app.controller('statsCtrl', function($scope){
     updateScores();
   };
   socket.on('message',function(data){
+    console.log("on message")
     init();
   });
 });

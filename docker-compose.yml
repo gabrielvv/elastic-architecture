@@ -3,9 +3,9 @@ version: "3"
 services:
   app:
     build: ./app
-    command: nodemon --debug server.js
-    volumes:
-      - ./app:/app
+    command: node --inspect server.js
+    # volumes:
+      # - ./app:/app
     ports:
       - "5001:80"
       - "5858:5858"
@@ -20,7 +20,7 @@ services:
     networks:
       - back-tier
   db:
-    image: postgres:9.5
+    image: postgres:9.4
     container_name: db
     volumes:
       - "db-data:/var/lib/postgresql/data"
