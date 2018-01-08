@@ -2,12 +2,6 @@
 
 ![architecture](architecture.png)
 
-> /login  
-> /vote  
-> /result  
-> /secure/vote  
-> /secure/result
-
 ```
 curl -X POST \
   http://localhost:5001/login \
@@ -41,7 +35,7 @@ docker-compose up --force-recreate --build
 ```
 
 ### postgres
-https://hub.docker.com/_/postgres/
+https://hub.docker.com/_/postgres/  
 http://postgresguide.com/utilities/psql.html
 ```sh
 # ne marche qu'avec cmd
