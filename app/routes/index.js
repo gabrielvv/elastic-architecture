@@ -1,4 +1,6 @@
-const path = require("path"),
+const express = require("express"),
+      router = express.Router(),
+      path = require("path"),
       os = require("os"),
       multer = require('multer'), // v1.0.5
       upload = multer(); // for parsing multipart/form-data
@@ -11,8 +13,7 @@ module.exports = function(app){
 
   const {Vote, User} = app.models;
 
-  // '/' ou '/vote'
-  app.get(/^\/(|vote)$/g, function (req, res) {
+  router.get("/vote", function (req, res) {
     res.render('./vote.ejs', {
       vote: null,
       option_a,
@@ -22,7 +23,7 @@ module.exports = function(app){
   });
 
   // http://expressjs.com/fr/api.html#req.body
-  app.post('/', upload.array(), function (req, res) {
+  router.post('/', upload.array(), function (req, res) {
     console.log("vote", {id: req.cookies.voterId, vote: req.body.vote})
     // TODO
     Vote
@@ -48,7 +49,9 @@ module.exports = function(app){
     })
   });
 
-  app.get('/result', function (req, res) {
-    res.redirect("./result.html");
+  router.get('/result', function (req, res) {
+    res.redirect("/result.html");
   });
+
+  return router;
 }

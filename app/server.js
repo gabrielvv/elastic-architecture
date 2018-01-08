@@ -9,6 +9,8 @@ const express = require('express'),
     //   db: 0,
     // });
 
+global.__root = __dirname + '/';
+
 // redisClient.on("error", function (err) {
 //     console.log("Error " + err);
 // });
@@ -29,7 +31,7 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
-require("./models")(app);
+require(__root + "models")(app);
 
 const {sequelize, User, Vote, initDB} = app.models;
 const getVotesAndEmit = ()=>{
@@ -38,7 +40,7 @@ const getVotesAndEmit = ()=>{
       o[v.vote] = [v.vote] ? ++o[v.vote] : 0;
       return o;
     }, {a: 0, b: 0})
-    console.log("votes", votes);
+    // console.log("votes", votes);
     io.sockets.emit("scores", JSON.stringify(votes));
   })
   .then(()=>setTimeout(getVotesAndEmit, 1000))
@@ -46,8 +48,14 @@ const getVotesAndEmit = ()=>{
 }
 initDB(getVotesAndEmit)
 
-require("./middlewares")(app)
-require("./routes")(app)
+require(__root + "middlewares")(app)
+const PublicController = require(__root + "routes")(app);
+const AuthController = require(__root + 'auth/AuthController')(app);
+const VerifyToken = require(__root + 'auth/VerifyToken');
+app.use(AuthController);
+app.use(PublicController);
+app.use("/secure", VerifyToken);
+app.use("/secure", PublicController);
 
 server.listen(port, function () {
   var port = server.address().port;
