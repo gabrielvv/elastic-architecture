@@ -43,6 +43,17 @@ docker-compose exec db psql -h localhost -U postgres
 > \d
 ```
 
+### load balancing & socket.io
+
+https://socket.io/docs/using-multiple-nodes/
+https://github.com/socketio/socket.io/tree/master/examples
+
+```sh
+docker run -d -p 8000:80 --name nginx-proxy -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy
+docker run -d -p 8000:8000 --name whoami -e VIRTUAL_HOST="whoami.local" -t jwilder/whoami
+docker run -d -p 8080:8080 --name whoami2 -e VIRTUAL_HOST="whoami2.local" -t jwilder/whoami
+```
+
 ## conf
 
 **nodemon** a été retiré de la commande dans docker-compose.yml
