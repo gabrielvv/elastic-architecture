@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: F:\Etudes\Futur\ESGI\Projets\Perso\docker\kubernetes\bin\kompose.exe
+      convert -f ..\..\example-voting-app\docker-compose-nobuild.yml
+    kompose.version: 1.6.0 (e4adfef)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: db
+  name: db
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: db
+        tier: backend
+        io.kompose.service: db
+    spec:
+      containers:
+      - image: postgres:9.4
+        name: db
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: db-data
+      restartPolicy: Always
+      volumes:
+      - name: db-data
+        persistentVolumeClaim:
+          claimName: db-data
+status: {}

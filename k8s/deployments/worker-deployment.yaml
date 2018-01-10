@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: F:\Etudes\Futur\ESGI\Projets\Perso\docker\kubernetes\bin\kompose.exe
+      convert -f ..\..\example-voting-app\docker-compose-nobuild.yml
+    kompose.version: 1.6.0 (e4adfef)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: worker
+  name: worker
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: worker
+        tier: backend
+        io.kompose.service: worker
+    spec:
+      containers:
+      - image: dockersamples/examplevotingapp_worker:latest
+        name: worker
+        resources: {}
+      restartPolicy: Always
+status: {}
