@@ -1,6 +1,11 @@
-# ELASTIC ARCHITECTURE
+# ELASTIC ARCHITECTURE V1
 
 ![architecture](architecture.png)
+
+## TODO
+
+* graceful shutdown (**app** pour fermeture connexions puis **db** et **redis**)
+* auto-scaling et déploiement sur kubernetes
 
 ```
 curl -X POST \
@@ -65,7 +70,3 @@ user = {
   password: "$2a$10$KgFhp4HAaBCRAYbFp5XYUOKrbO90yrpUQte4eyafk4Tu6mnZcNWiK",
 }
 ```
-
-## TODO
-
-* graceful shutdown (**app** pour fermeture connexions puis **db** et **redis**)
