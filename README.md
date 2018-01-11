@@ -6,6 +6,7 @@
 
 * graceful shutdown (**app** pour fermeture connexions puis **db** et **redis**)
 * auto-scaling et déploiement sur kubernetes
+* locust files
 
 ```
 curl -X POST \
@@ -69,4 +70,10 @@ user = {
   // bcrypt hash for "password"
   password: "$2a$10$KgFhp4HAaBCRAYbFp5XYUOKrbO90yrpUQte4eyafk4Tu6mnZcNWiK",
 }
+```
+
+## [locust](https://docs.locust.io/en/latest/index.html)
+
+```sh
+locust --host=http://example.com
 ```

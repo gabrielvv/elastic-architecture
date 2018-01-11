@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: F:\Etudes\Futur\ESGI\Projets\Perso\docker\kubernetes\bin\kompose.exe
+      convert
+    kompose.version: 1.6.0 (e4adfef)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: app
+  name: app
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: app
+    spec:
+      containers:
+      - args:
+        - node
+        - --inspect
+        - server.js
+        image: app
+        name: app
+        ports:
+        - containerPort: 80
+        - containerPort: 5858
+        resources: {}
+      restartPolicy: Always
+status: {}
