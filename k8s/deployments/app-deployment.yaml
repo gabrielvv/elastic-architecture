@@ -23,7 +23,7 @@ spec:
         - node
         - --inspect
         - server.js
-        image: app
+        image: gabrielvv/elastic_app:v1
         name: app
         ports:
         - containerPort: 80

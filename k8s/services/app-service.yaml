@@ -8,15 +8,17 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: app
+    tier: frontend
   name: app
 spec:
+  type: LoadBalancer
   ports:
   - name: "5001"
     port: 5001
     targetPort: 80
-  - name: "5858"
-    port: 5858
-    targetPort: 5858
+  # - name: "5858"
+  #   port: 5858
+  #   targetPort: 5858
   selector:
     io.kompose.service: app
 status:

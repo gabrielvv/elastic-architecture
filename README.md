@@ -2,6 +2,11 @@
 
 ![architecture](architecture.png)
 
+```sh
+minikube start
+bash ./k8s/start.sh
+```
+
 ## TODO
 
 * graceful shutdown (**app** pour fermeture connexions puis **db** et **redis**)

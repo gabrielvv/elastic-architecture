@@ -10,7 +10,7 @@ services:
       - front-tier
 
   app:
-    build: ../app/
+    build: ./app/
     ports: ["80"]
     depends_on:
       - redis
@@ -19,11 +19,11 @@ services:
       - front-tier
       - back-tier
 
-  redis:
-    image: redis:alpine
-    ports: ["6379"]
-    networks:
-      - back-tier
+  # redis:
+  #   image: redis:alpine
+  #   ports: ["6379"]
+  #   networks:
+  #     - back-tier
 
   db:
     image: postgres:9.4

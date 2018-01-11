@@ -8,6 +8,7 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: db
+    tier: backend
   name: db
 spec:
   clusterIP: None
