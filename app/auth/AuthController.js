@@ -4,16 +4,16 @@
 *
 */
 
-var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser');
+const express = require('express');
+const router = express.Router();
+const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-var VerifyToken = require('./VerifyToken');
+const VerifyToken = require('./VerifyToken');
 
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
-var config = require('../config');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('../config');
 
 module.exports = function(server){
 
@@ -48,6 +48,15 @@ router.get('/me', VerifyToken, function(req, res, next) {
       res.status(200).send(user);
   })
   .catch(err=>res.status(500).send("There was a problem finding the user."))
+});
+
+router.post('/login/:delay', function(req, res) {
+  const delay = parseInt(req.params.delay);
+  if(delay > 0){
+    setTimeout(()=>res.redirect('/login'),delay);
+  } else {
+    res.redirect('/login');
+  }
 });
 
 router.post('/login', function(req, res) {

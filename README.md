@@ -48,6 +48,7 @@ curl -i -XPOST $INFLUX_IP:8086/query --data-urlencode "q=$CREATE_CQ"
 
 ## TODO
 
+* Delay middleware
 * graceful shutdown (**app** pour fermeture connexions puis **db** et **redis**)
 * auto-scaling+load balancing et déploiement sur kubernetes
 * locust files

@@ -52,6 +52,8 @@ require(__root + "middlewares")(app)
 const PublicController = require(__root + "routes")(app);
 const AuthController = require(__root + 'auth/AuthController')(app);
 const VerifyToken = require(__root + 'auth/VerifyToken');
+const Delay = require(__root + 'middlewares/Delay');
+app.use(Delay);
 app.use(AuthController);
 app.use(PublicController);
 app.use("/secure", VerifyToken);
