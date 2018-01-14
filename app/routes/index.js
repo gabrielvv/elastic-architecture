@@ -13,6 +13,8 @@ module.exports = function(app){
 
   const {Vote, User} = app.models;
 
+  router.get("/", (req, res)=>res.send("Container ID : "+hostname));
+
   router.get("/vote", function (req, res) {
     res.render('./vote.ejs', {
       vote: null,

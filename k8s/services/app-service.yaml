@@ -11,7 +11,7 @@ metadata:
     tier: frontend
   name: app
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - name: "5001"
     port: 5001

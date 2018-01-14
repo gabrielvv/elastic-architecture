@@ -16,18 +16,16 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
+        app: app
+        tier: frontend
         io.kompose.service: app
     spec:
       containers:
       - args:
-        - node
-        - --inspect
-        - server.js
-        image: gabrielvv/elastic_app:v1
+        image: gabrielvv/elastic_app:v1.2
         name: app
         ports:
         - containerPort: 80
-        - containerPort: 5858
         resources:
           limits:
             cpu: "1"
