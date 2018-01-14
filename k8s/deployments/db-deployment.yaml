@@ -22,7 +22,11 @@ spec:
       containers:
       - image: postgres:9.4
         name: db
-        resources: {}
+        resources:
+          limits:
+            cpu: "1"
+          requests:
+            cpu: "0.5"
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: db-data

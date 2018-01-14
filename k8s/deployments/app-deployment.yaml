@@ -10,7 +10,7 @@ metadata:
     io.kompose.service: app
   name: app
 spec:
-  replicas: 1
+  replicas: 3
   strategy: {}
   template:
     metadata:
@@ -28,6 +28,10 @@ spec:
         ports:
         - containerPort: 80
         - containerPort: 5858
-        resources: {}
+        resources:
+          limits:
+            cpu: "1"
+          requests:
+            cpu: "200m"
       restartPolicy: Always
 status: {}
