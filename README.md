@@ -7,6 +7,12 @@
 https://hub.docker.com/r/erdow/
 
 ```sh
+# build app container
+docker build ./app -t gabrielvv/elasticarchitecture_app:<tag>
+docker push gabrielvv/elasticarchitecture_app:<tag>
+```
+
+```sh
 #using same docker host as minikube
 eval $(minikube docker-env)
 #undo

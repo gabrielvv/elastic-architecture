@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - args:
-        image: gabrielvv/elastic_app:v1.2
+        image: gabrielvv/elasticarchitecture_app:v1.3
         name: app
         ports:
         - containerPort: 80
@@ -30,6 +30,6 @@ spec:
           limits:
             cpu: "1"
           requests:
-            cpu: "200m"
+            cpu: "100m"
       restartPolicy: Always
 status: {}
